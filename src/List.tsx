@@ -1,7 +1,17 @@
-import React from "react";
+import * as React from "react";
 
-class List extends React.Component {
-  constructor(props) {
+interface IProps {
+  addFunction:(assignmentName: string) => void;
+  currList: any;
+  placeholder: string;
+  title: string;
+}
+interface IState {
+  value: any;
+}
+
+class List extends React.Component<IProps, IState> {
+  constructor(props:any) {
     super(props);
     this.state = {
       value: ""
@@ -11,20 +21,7 @@ class List extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    this.setState({
-      value: ""
-    });
-
-    this.props.addFunction(this.state.value);
-    event.preventDefault();
-  }
-
-  render() {
+  public render() {
     return (
       <div className="col-6 mx-auto">
         {/*Replace the code below to call the title prop for step 2*/}
@@ -43,7 +40,7 @@ class List extends React.Component {
         </form>
         <ul className="Box">
           <div className="Box-header">{this.props.title}</div>
-          {this.props.currList.map((item, index) => (
+          {this.props.currList.map((item:any, index:number) => (
             <li className="Box-row" key={index}>
               {" "}
               {item}{" "}
@@ -53,6 +50,20 @@ class List extends React.Component {
       </div>
     );
   }
+
+  private handleChange(event:React.FormEvent<HTMLInputElement>) {
+    this.setState({ value: event.currentTarget.value });
+  }
+
+  private handleSubmit(event:React.FormEvent<HTMLFormElement>) {
+    this.setState({
+      value: ""
+    });
+
+    this.props.addFunction(this.state.value);
+    event.preventDefault();
+  }
+
 }
 
 export default List;

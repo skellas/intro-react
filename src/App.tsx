@@ -1,56 +1,35 @@
-import React from "react";
-import Table from "./Table";
-import List from "./List";
+import * as React from "react";
 
-class App extends React.Component {
-  constructor(props) {
+import List from "./List";
+import Table from "./Table";
+
+interface IState {
+  assignments: any;
+  buttonClicked: any;
+  grades: any;
+  students: any;
+}
+
+class App extends React.Component<{},IState> {
+  constructor(props: any) {
     super(props);
 
     this.state = {
-      buttonClicked: "",
       assignments: [],
-      students: [],
-      grades: {}
+      buttonClicked: "",
+      grades: {},
+      students: []
     };
 
-    this.handleButtonClicked = this.handleButtonClicked.bind(this);
     this.addAssignment = this.addAssignment.bind(this);
     this.addStudent = this.addStudent.bind(this);
     this.addGrade = this.addGrade.bind(this);
+    this.handleAssignmentsButtonClicked = this.handleAssignmentsButtonClicked.bind(this);
+    this.handleGradesButtonClicked = this.handleGradesButtonClicked.bind(this);
+    this.handleStudentsButtonClicked = this.handleStudentsButtonClicked.bind(this);
   }
 
-  handleButtonClicked(buttonName) {
-    this.setState({
-      buttonClicked: buttonName
-    });
-  }
-
-  /*Check out this addAssignment function for step 3*/
-  addAssignment(assignmentName) {
-    this.setState({
-      assignments: this.state.assignments.concat(assignmentName)
-    });
-  }
-
-  /*Write an addStudent function here for step 3*/
-  addStudent(studentName) {
-    this.setState( {
-      students: this.state.students.concat(studentName)
-    });
-  }
-
-  addGrade(assignment, student, score) {
-    let grades = this.state.grades;
-    let assignmentName = assignment;
-    let studentName = student;
-    if (!(assignment in grades)) {
-      grades[assignmentName] = {};
-    }
-    grades[assignmentName][studentName] = score;
-    this.setState({ grades: grades });
-  }
-
-  render() {
+  public render() {
     let tabChoice = <div />;
 
     if (this.state.buttonClicked === "assignments") {
@@ -98,19 +77,19 @@ class App extends React.Component {
           <div className="UnderlineNav-body pt-6">
             <button
               className="btn btn-primary"
-              onClick={() => this.handleButtonClicked("assignments")}
+              onClick={this.handleAssignmentsButtonClicked}
             >
               Assignments
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => this.handleButtonClicked("students")}
+              onClick={this.handleStudentsButtonClicked}
             >
               Students
             </button>
             <button
               className="btn btn-primary"
-              onClick={() => this.handleButtonClicked("grades")}
+              onClick={this.handleGradesButtonClicked}
             >
               Grades
             </button>
@@ -120,6 +99,50 @@ class App extends React.Component {
       </div>
     );
   }
+
+  private handleAssignmentsButtonClicked() {
+    this.setState({
+      buttonClicked: "assignments"
+    });
+  }
+
+  private handleStudentsButtonClicked() {
+    this.setState({
+      buttonClicked: "students"
+    });
+  }
+
+  private handleGradesButtonClicked() {
+    this.setState({
+      buttonClicked: "grades"
+    });
+  }
+
+  /*Check out this addAssignment function for step 3*/
+  private addAssignment(assignmentName: string) {
+    this.setState({
+      assignments: this.state.assignments.concat(assignmentName)
+    });
+  }
+
+  /*Write an addStudent function here for step 3*/
+  private addStudent(studentName: string) {
+    this.setState( {
+      students: this.state.students.concat(studentName)
+    });
+  }
+
+  private addGrade(assignment: string, student: string, event: React.FormEvent<HTMLInputElement>) {
+    const grades = this.state.grades;
+    const assignmentName = assignment;
+    const studentName = student;
+    if (!(assignment in grades)) {
+      grades[assignmentName] = {};
+    }
+    grades[assignmentName][studentName] = event.currentTarget.value;
+    this.setState({grades});
+  }
+
 }
 
 export default App;
